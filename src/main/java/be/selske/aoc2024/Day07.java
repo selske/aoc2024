@@ -2,7 +2,8 @@ package be.selske.aoc2024;
 
 import be.selske.aoc2024.benchmark.Day;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 

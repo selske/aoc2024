@@ -1,11 +1,15 @@
 package be.selske.aoc2024;
 
 import be.selske.aoc2024.benchmark.Day;
+import be.selske.aoc2024.util.map.CardinalDirections;
+import be.selske.aoc2024.util.map.Direction;
+import be.selske.aoc2024.util.map.MapParser;
+import be.selske.aoc2024.util.map.Point;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Day06 extends Day {
-
 
     public Day06() {
         super(6);
@@ -22,27 +26,21 @@ public class Day06 extends Day {
 
     @Override
     protected void solve(ResultContainer results, String input, String parameter) {
-        List<String> lines = input.lines().toList();
-
+        AtomicReference<GuardState> guard = new AtomicReference<>();
         Map<Point, Character> map = new HashMap<>();
-        GuardState guard = null;
-        for (int y = 0; y < lines.size(); y++) {
-            String line = lines.get(y);
-            for (int x = 0; x < line.length(); x++) {
-                char c = line.charAt(x);
-                if (c == '^') {
-                    guard = new GuardState(new Point(x, y), Direction.UP);
-                }
-                map.put(new Point(x, y), c);
+        MapParser.parse(input, (point, c) -> {
+            if (c == '^') {
+                guard.set(new GuardState(point, CardinalDirections.UP));
             }
-        }
-        if (guard == null) {
+            map.put(point, c);
+        });
+        if (guard.get() == null) {
             throw new IllegalArgumentException("No guard found");
         }
 
-        List<Point> path = part1(guard, map);
+        List<Point> path = part1(guard.get(), map);
         results.setPart1(path.size());
-        results.setPart2(part2(guard, map, path));
+        results.setPart2(part2(guard.get(), map, path));
     }
 
     private static List<Point> part1(GuardState guard, Map<Point, Character> map) {
@@ -96,31 +94,6 @@ public class Day06 extends Day {
 
         public GuardState advance() {
             return new GuardState(pointAhead(), direction);
-        }
-    }
-
-    private record Point(int x, int y) {
-
-        private Point getNeighbour(Direction direction) {
-            return switch (direction) {
-                case UP -> new Point(x, y - 1);
-                case DOWN -> new Point(x, y + 1);
-                case LEFT -> new Point(x - 1, y);
-                case RIGHT -> new Point(x + 1, y);
-            };
-        }
-
-    }
-
-    private enum Direction {
-        UP,
-        RIGHT,
-        DOWN,
-        LEFT,
-        ;
-
-        public Direction turnRight() {
-            return Direction.values()[(this.ordinal() + 1) % Direction.values().length];
         }
     }
 

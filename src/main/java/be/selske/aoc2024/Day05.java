@@ -2,8 +2,9 @@ package be.selske.aoc2024;
 
 import be.selske.aoc2024.benchmark.Day;
 
-import static java.lang.Integer.parseInt;
 import java.util.*;
+
+import static java.lang.Integer.parseInt;
 
 public class Day05 extends Day {
 

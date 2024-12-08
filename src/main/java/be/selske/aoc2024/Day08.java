@@ -1,6 +1,9 @@
 package be.selske.aoc2024;
 
 import be.selske.aoc2024.benchmark.Day;
+import be.selske.aoc2024.util.map.MapParser;
+import be.selske.aoc2024.util.map.MapSize;
+import be.selske.aoc2024.util.map.Point;
 
 import java.util.*;
 
@@ -25,24 +28,17 @@ public class Day08 extends Day {
         List<String> lines = input.lines().toList();
 
         Map<Character, List<Point>> antennas = new HashMap<>();
-        for (int y = 0; y < lines.size(); y++) {
-            String line = lines.get(y);
-            for (int x = 0; x < line.length(); x++) {
-                char c = line.charAt(x);
-                Point point = new Point(x, y);
-                if (c != '.') {
-                    antennas.computeIfAbsent(c, _ -> new ArrayList<>()).add(point);
-                }
+        MapSize mapSize = MapParser.parse(input, (point, c) -> {
+            if (c != '.') {
+                antennas.computeIfAbsent(c, _ -> new ArrayList<>()).add(point);
             }
-        }
+        });
 
-        int width = lines.getFirst().length();
-        int height = lines.size();
-        results.setPart1(getPart1(antennas, width, height));
-        results.setPart2(getPart2(antennas, width, height));
+        results.setPart1(getPart1(antennas, mapSize));
+        results.setPart2(getPart2(antennas, mapSize));
     }
 
-    private static long getPart1(Map<Character, List<Point>> antennas, int width, int height) {
+    private static long getPart1(Map<Character, List<Point>> antennas, MapSize mapSize) {
         Set<Point> antiNodes = new HashSet<>();
         antennas.values().forEach(nodes -> {
             for (Point a : nodes) {
@@ -52,7 +48,7 @@ public class Day08 extends Day {
                     int deltaY = b.y() - a.y();
                     Point antiNode = new Point(a.x() - deltaX, a.y() - deltaY);
 
-                    if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < width && antiNode.y() < height) {
+                    if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < mapSize.width() && antiNode.y() < mapSize.height()) {
                         antiNodes.add(antiNode);
                     }
                 }
@@ -61,7 +57,7 @@ public class Day08 extends Day {
         return antiNodes.size();
     }
 
-    private static long getPart2(Map<Character, List<Point>> antennas, int width, int height) {
+    private static long getPart2(Map<Character, List<Point>> antennas, MapSize mapSize) {
         Set<Point> antiNodes = new HashSet<>();
         antennas.values().forEach(nodes -> {
             for (Point a : nodes) {
@@ -72,7 +68,7 @@ public class Day08 extends Day {
                     int offset = 0;
                     while (true) {
                         Point antiNode = new Point(a.x() - deltaX * offset, a.y() - deltaY * offset);
-                        if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < width && antiNode.y() < height) {
+                        if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < mapSize.width() && antiNode.y() < mapSize.height()) {
                             antiNodes.add(antiNode);
                         } else {
                             break;
@@ -84,7 +80,5 @@ public class Day08 extends Day {
         });
         return antiNodes.size();
     }
-
-    private record Point(int x, int y) {}
 
 }
