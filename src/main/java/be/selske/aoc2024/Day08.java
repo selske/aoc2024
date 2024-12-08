@@ -24,25 +24,25 @@ public class Day08 extends Day {
     protected void solve(ResultContainer results, String input, String parameter) {
         List<String> lines = input.lines().toList();
 
-        Map<Point, Character> map = new HashMap<>();
         Map<Character, List<Point>> antennas = new HashMap<>();
         for (int y = 0; y < lines.size(); y++) {
             String line = lines.get(y);
             for (int x = 0; x < line.length(); x++) {
                 char c = line.charAt(x);
                 Point point = new Point(x, y);
-                map.put(point, c);
                 if (c != '.') {
                     antennas.computeIfAbsent(c, _ -> new ArrayList<>()).add(point);
                 }
             }
         }
 
-        results.setPart1(getPart1(antennas, map));
-        results.setPart2(getPart2(antennas, map));
+        int width = lines.getFirst().length();
+        int height = lines.size();
+        results.setPart1(getPart1(antennas, width, height));
+        results.setPart2(getPart2(antennas, width, height));
     }
 
-    private static long getPart1(Map<Character, List<Point>> antennas, Map<Point, Character> map) {
+    private static long getPart1(Map<Character, List<Point>> antennas, int width, int height) {
         Set<Point> antiNodes = new HashSet<>();
         antennas.values().forEach(nodes -> {
             for (Point a : nodes) {
@@ -51,7 +51,8 @@ public class Day08 extends Day {
                     int deltaX = b.x() - a.x();
                     int deltaY = b.y() - a.y();
                     Point antiNode = new Point(a.x() - deltaX, a.y() - deltaY);
-                    if (map.containsKey(antiNode)) {
+
+                    if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < width && antiNode.y() < height) {
                         antiNodes.add(antiNode);
                     }
                 }
@@ -60,7 +61,7 @@ public class Day08 extends Day {
         return antiNodes.size();
     }
 
-    private static long getPart2(Map<Character, List<Point>> antennas, Map<Point, Character> map) {
+    private static long getPart2(Map<Character, List<Point>> antennas, int width, int height) {
         Set<Point> antiNodes = new HashSet<>();
         antennas.values().forEach(nodes -> {
             for (Point a : nodes) {
@@ -71,7 +72,7 @@ public class Day08 extends Day {
                     int offset = 0;
                     while (true) {
                         Point antiNode = new Point(a.x() - deltaX * offset, a.y() - deltaY * offset);
-                        if (map.containsKey(antiNode)) {
+                        if (antiNode.x() >= 0 && antiNode.y() >= 0 && antiNode.x() < width && antiNode.y() < height) {
                             antiNodes.add(antiNode);
                         } else {
                             break;
