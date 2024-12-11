@@ -9,7 +9,6 @@ import java.util.*;
 
 public class Day08 extends Day {
 
-
     public Day08() {
         super(8);
     }
@@ -25,8 +24,6 @@ public class Day08 extends Day {
 
     @Override
     protected void solve(ResultContainer results, String input, String parameter) {
-        List<String> lines = input.lines().toList();
-
         Map<Character, List<Point>> antennas = new HashMap<>();
         MapSize mapSize = MapParser.parse(input, (point, c) -> {
             if (c != '.') {
