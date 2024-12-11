@@ -1,0 +1,17 @@
+{
+  "reflection": [
+    {"type": "be.selske.aoc2024.Day01", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day02", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day03", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day04", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day05", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day06", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day07", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day08", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day09", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day10", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day11", "methods": [{"name": "<init>", "parameterTypes": []}]}
+  ],
+  "resources": [],
+  "bundles": []
+}

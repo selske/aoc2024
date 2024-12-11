@@ -1,13 +1,42 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.graalvm.buildtools.native' version '0.10.4'
+    id 'maven-publish'
 }
 
 repositories {
     mavenCentral()
 }
 
+group = "be.selske"
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(23)
     }
+}
+
+application {
+    mainClass = "be.selske.aoc2024.benchmark.Runner"
+
+}
+
+graalvmNative {
+    binaries {
+        main {
+            configurationFileDirectories.from(file('src/main/resources/META-INF/native'))
+            quickBuild = true
+            verbose = false
+            requiredVersion = '23'
+            buildArgs.add('--enable-sbom')
+            buildArgs.add('--emit build-report')
+            buildArgs.add('--gc=G1')
+            resources.autodetect()
+        }
+    }
+}
+
+tasks.named('nativeRun') {
+    runtimeArgs = project.days.split(',') as List
 }

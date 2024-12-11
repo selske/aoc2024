@@ -72,9 +72,13 @@ public abstract class Day {
             System.out.println("Part 1: " + results.part1);
             System.out.println("Part 2: " + results.part2);
             System.out.println();
-            System.out.println("Hot time:  " + hot / 1_000_000. + "ms");
+            if (executeExample) {
+                System.out.println("Hot time:  " + hot / 1_000_000. + "ms");
+            } else {
+                System.out.println("Cold time:  " + hot / 1_000_000. + "ms");
+            }
 
-            return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), hot);
+                return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), hot);
         } else {
             return new Result(null, null, -1);
         }
