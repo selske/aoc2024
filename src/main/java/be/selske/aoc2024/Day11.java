@@ -40,16 +40,18 @@ public class Day11 extends Day {
             }
         }
 
-        results.setPart1(solve(stones, 25));
-        results.setPart2(solve(stones, 75));
+        stones = solve(stones, 25);
+        results.setPart1(stones.stream().mapToLong(Stone::count).sum());
+        stones = solve(stones, 50);
+        results.setPart2(stones.stream().mapToLong(Stone::count).sum());
     }
 
-    private long solve(List<Stone> stones, int iterations) {
+    private List<Stone> solve(List<Stone> stones, int iterations) {
         List<Stone> result = stones;
         for (int i = 0; i < iterations; i++) {
             result = blink(result);
         }
-        return result.stream().mapToLong(Stone::count).sum();
+        return result;
     }
 
 
