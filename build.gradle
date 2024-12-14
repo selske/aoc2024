@@ -40,3 +40,7 @@ graalvmNative {
 tasks.named('nativeRun') {
     runtimeArgs = project.days.split(',') as List
 }
+
+tasks.withType(JavaExec) {
+    it.outputs.upToDateWhen { false }
+}
