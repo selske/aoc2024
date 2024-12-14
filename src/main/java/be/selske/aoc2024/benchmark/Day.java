@@ -10,12 +10,18 @@ public abstract class Day {
     private final String input;
     private boolean executeExample = false;
     private boolean executePuzzle = false;
-    private String exampleParam;
-    private String puzzleParam;
+    private final String exampleParam;
+    private final String puzzleParam;
 
     public Day(int day) {
+        this(day, null, null);
+    }
+
+    public Day(int day, String exampleParam, String puzzleParam) {
+        this.exampleParam = exampleParam;
+        this.puzzleParam = puzzleParam;
         try (InputStream exampleStream = Day.class.getResourceAsStream("/day" + day + "_example.txt");
-             InputStream inputStream = Day.class.getResourceAsStream("/day" + day + ".txt");
+             InputStream inputStream = Day.class.getResourceAsStream("/day" + day + ".txt")
         ) {
             this.exampleInput = new String(exampleStream.readAllBytes());
             this.input = new String(inputStream.readAllBytes());
@@ -27,11 +33,6 @@ public abstract class Day {
     protected abstract void solve(ResultContainer results, String input, String parameter);
 
     public Day example() {
-        return example(null);
-    }
-
-    public Day example(String param) {
-        this.exampleParam = param;
         this.executeExample = true;
         return this;
     }
@@ -43,11 +44,6 @@ public abstract class Day {
     }
 
     public Day puzzle() {
-        return puzzle(null);
-    }
-
-    public Day puzzle(String param) {
-        this.puzzleParam = param;
         this.executePuzzle = true;
         return this;
     }
@@ -78,7 +74,7 @@ public abstract class Day {
                 System.out.println("Cold time:  " + hot / 1_000_000. + "ms");
             }
 
-                return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), hot);
+            return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), hot);
         } else {
             return new Result(null, null, -1);
         }
