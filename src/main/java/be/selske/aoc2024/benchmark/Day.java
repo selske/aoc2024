@@ -49,6 +49,10 @@ public abstract class Day {
     }
 
     public Result benchmark() {
+        return benchmark(true);
+    }
+
+    public Result benchmark(boolean preHeat) {
         if (executeExample) {
             var results = new ResultContainer();
             solve(results, exampleInput, exampleParam);
@@ -57,24 +61,27 @@ public abstract class Day {
             System.out.println();
         }
         if (executePuzzle) {
+            if (preHeat) {
+                solve(new ResultContainer(), input, puzzleParam);
+            }
             var results = new ResultContainer();
             var before = System.nanoTime();
             solve(results, input, puzzleParam);
 
             var after = System.nanoTime();
 
-            var hot = after - before;
+            var runtime = after - before;
 
             System.out.println("Part 1: " + results.part1);
             System.out.println("Part 2: " + results.part2);
             System.out.println();
-            if (executeExample) {
-                System.out.println("Hot time:  " + hot / 1_000_000. + "ms");
+            if (preHeat) {
+                System.out.println("Hot time:  " + runtime / 1_000_000. + "ms");
             } else {
-                System.out.println("Cold time:  " + hot / 1_000_000. + "ms");
+                System.out.println("Cold time:  " + runtime / 1_000_000. + "ms");
             }
 
-            return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), hot);
+            return new Result(results.part1 == null ? null : results.part1.toString(), results.part2 == null ? null : results.part2.toString(), runtime);
         } else {
             return new Result(null, null, -1);
         }
