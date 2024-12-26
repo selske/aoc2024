@@ -17,7 +17,8 @@
     {"type": "be.selske.aoc2024.Day15", "methods": [{"name": "<init>", "parameterTypes": []}]},
     {"type": "be.selske.aoc2024.Day18", "methods": [{"name": "<init>", "parameterTypes": []}]},
     {"type": "be.selske.aoc2024.Day19", "methods": [{"name": "<init>", "parameterTypes": []}]},
-    {"type": "be.selske.aoc2024.Day20", "methods": [{"name": "<init>", "parameterTypes": []}]}
+    {"type": "be.selske.aoc2024.Day20", "methods": [{"name": "<init>", "parameterTypes": []}]},
+    {"type": "be.selske.aoc2024.Day22", "methods": [{"name": "<init>", "parameterTypes": []}]}
   ],
   "resources": [],
   "bundles": []
