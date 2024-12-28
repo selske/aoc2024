@@ -5,11 +5,8 @@ import be.selske.aoc2024.benchmark.Day;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.LongStream;
 
 import static java.lang.Integer.parseInt;
-import static java.lang.Math.pow;
 import static java.util.stream.Collectors.joining;
 
 public class Day17 extends Day {
@@ -24,11 +21,11 @@ public class Day17 extends Day {
 
     public static void main(String[] args) {
         new Day17()
-//                .example()
+                .example()
                 .puzzle()
-                .benchmark(false)
+                .benchmark()
                 .verifyPart1("7,3,5,7,5,7,4,3,0")
-                .verifyPart2(null); // too low 105694709871369
+                .verifyPart2("105734774294938");
     }
 
     @Override
@@ -42,10 +39,8 @@ public class Day17 extends Day {
 
         int[] instructions = Arrays.stream(lines.get(4).split(": ")[1].split(",")).mapToInt(Integer::parseInt).toArray();
 
-        String part1 = part1(instructions, Arrays.copyOf(register, register.length));
-        results.setPart1(part1);
-        long part2 = part2(instructions, Arrays.copyOf(register, register.length));
-        results.setPart2(part2);
+        results.setPart1(part1(instructions, register));
+        results.setPart2(part2(instructions));
     }
 
     private String part1(int[] instructions, long[] register) {
@@ -53,61 +48,35 @@ public class Day17 extends Day {
         return outputs.stream().map(Object::toString).collect(joining(","));
     }
 
-    private long part2(int[] instructions, long[] initialRegister) {
-        Random random = new Random();
-//        return LongStream.generate(() -> random.nextLong((long) pow(8, 12)) + (3 * (long) pow(8, 15)))
+    private long part2(int[] instructions) {
+        return find(instructions, new int[instructions.length], instructions.length - 1);
+    }
 
-        long result = 3 * pow(8, 15);
-        for (int n = 14; n >= 0; n--) {
-            System.out.println(n);
-            int finalN = n;
-            long finalResult = result;
-            LongStream.rangeClosed(0, 7)
-                    .filter(i -> {
-                        long[] register = Arrays.copyOf(initialRegister, initialRegister.length);
-                        register[A] = i * pow(8, finalN) + finalResult;
-                        List<Integer> output = run(instructions, register);
-                        System.out.println(output + " " + output.size());
-                        return output.get(finalN) == instructions[finalN];
-                    }).toArray();
-            long f = LongStream.rangeClosed(0, 7)
-                    .filter(i -> {
-                        long[] register = Arrays.copyOf(initialRegister, initialRegister.length);
-                        register[A] = i * pow(8, finalN) + finalResult;
-                        List<Integer> output = run(instructions, register);
-//                        System.out.println(output + " " + output.size());
-                        return output.get(finalN) == instructions[finalN];
-                    })
-                    .findFirst().orElseThrow();
-//            result += f * pow(8, n);
+    private long find(int[] instructions, int[] factors, int p) {
+        long start = 0;
+        for (int i = 0; i < factors.length; i++) {
+            start += factors[i] * pow(8, i);
         }
-        return result;
+        if (p == -1) {
+            return start;
+        }
+        for (int i = 0; i < 8; i++) {
+            long a = start + pow(8, p) * i;
+            List<Integer> output = run(instructions, new long[]{a, 0, 0});
+            if (output.size() == 16 && output.get(p) == instructions[p]) {
+                int[] newFactors = Arrays.copyOf(factors, factors.length);
+                newFactors[p] = i;
+                long result = find(instructions, newFactors, p - 1);
+                if (result > 0) {
+                    return result;
+                }
+            }
+        }
+        return -1;
     }
 
     private long pow(long a, long b) {
         return (long) Math.pow(a, b);
-    }
-
-    private int part2x(int[] instructions, long[] initialRegister) {
-        int i = 0;
-        trying:
-        while (true) {
-            System.out.println(i);
-            long[] register = Arrays.copyOf(initialRegister, initialRegister.length);
-            register[A] = i;
-            List<Integer> outputs = run(instructions, register);
-
-            if (instructions.length == outputs.size()) {
-                for (int j = 0; j < instructions.length; j++) {
-                    if (instructions[j] != outputs.get(j)) {
-                        i++;
-                        continue trying;
-                    }
-                }
-                return i;
-            }
-            i++;
-        }
     }
 
     private List<Integer> run(int[] instructions, long[] register) {
@@ -128,7 +97,9 @@ public class Day17 extends Day {
                     }
                 }
                 case 4 -> register[B] = register[B] ^ register[C];
-                case 5 -> outputs.add((int) (comboOperand(register, operand) % 8));
+                case 5 -> {
+                    outputs.add((int) (comboOperand(register, operand) % 8));
+                }
                 case 6 -> divide(B, register, operand);
                 case 7 -> divide(C, register, operand);
             }
@@ -140,7 +111,7 @@ public class Day17 extends Day {
         long numerator = register[A];
         double denominator = pow(2, comboOperand(register, operand));
         long result = (long) (numerator / denominator);
-        register[target] = result; //& 0xFFFFFFFFL;
+        register[target] = result;
     }
 
     private long comboOperand(long[] register, int operand) {
